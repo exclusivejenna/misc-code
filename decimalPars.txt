@@ -1,0 +1,64 @@
+decimal parsedAmount;
+
+bool isParsed = decimal.TryParse(txtAmount.Text, out parsedAmount);
+
+if (isParsed)
+{
+    challanModel.TotalAmount = parsedAmount;
+}
+else
+{
+    // Handle the error: the input was not a valid decimal
+    challanModel.TotalAmount = 0; // Or handle it as per your application's requirement
+}
+
+<NumericInput @bind-Value="challanModel.TotalAmount" />
+
+<DecimalInput @bind-Value="challanModel.TotalAmount" />
+
+
+<EditForm Model="@challanModel">
+    <div>
+        <label for="quantity">Quantity:</label>
+        <select @onchange="OnQuantityChange" class="form-control">
+            @for (int i = 1; i <= 50; i++)
+            {
+                <option value="@i">@i</option>
+            }
+        </select>
+        <ValidationMessage For="@(() => challanModel.Quantity)" />
+    </div>
+
+    <div>
+        <label>Total Amount:</label>
+        <input type="text" @bind="challanModel.TotalAmount" class="form-control" />
+    </div>
+
+    <button type="submit" class="btn btn-primary" @onclick="HandleSubmit">Submit</button>
+</EditForm>
+
+@code {
+    private ChallanModel challanModel = new ChallanModel();
+    private int selectedQuantity; // Variable to hold selected quantity
+
+    private void OnQuantityChange(ChangeEventArgs e)
+    {
+        // Convert the selected value from the dropdown to int
+        if (int.TryParse(e.Value.ToString(), out int quantity))
+        {
+            selectedQuantity = quantity; // Assign the selected quantity
+            challanModel.Quantity = selectedQuantity; // Optionally update the model too
+        }
+        else
+        {
+            // Handle error (e.g., show a message to the user)
+        }
+    }
+
+    private void HandleSubmit()
+    {
+        // You can access selectedQuantity here or use challanModel.Quantity
+        // Your submit logic here
+    }
+}
+
